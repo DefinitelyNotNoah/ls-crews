@@ -28,7 +28,6 @@ public class Main : Script
     private readonly Vector3 _scale = new(MarkerXy, MarkerXy, 0.5f);
     private readonly Color _color = Color.FromArgb(255, 243, 225, 107);
     private readonly Random _random = new();
-    private readonly List<Ped> _registeredPedKills = new();
     public static int WantedLevelBeforeEvasion;
 
     private CrewMenu CrewMenu { get; set; }
@@ -39,7 +38,7 @@ public class Main : Script
         StorageManager.EstablishAllDirectories();
 
         // Used for development.
-        // Function.Call(Hash.SET_CAN_ATTACK_FRIENDLY, Game.Player.Character, true, false);
+        Function.Call(Hash.SET_CAN_ATTACK_FRIENDLY, Game.Player.Character, true, false);
 
         Tick += OnTick;
         KeyDown += OnKeyDown;
@@ -168,6 +167,7 @@ public class Main : Script
                     }
                 }
 
+                // There's a logic error here preventing DrawTitle() from displaying the level if the placeholders get deleted while the player is in range.
                 if (!crew.HavePlaceholdersSpawned)
                 {
                     foreach (var ped in crew.PlaceholderModels)
@@ -182,7 +182,7 @@ public class Main : Script
 
                 // TODO: Line of sight to crew.Placeholders[0] is pretty inefficient and will likely need to be changed later on.
                 bool lineOfSight = Function.Call<bool>(Hash.HAS_ENTITY_CLEAR_LOS_TO_ENTITY, Game.Player.Character, crew.Placeholders[0], 17);
-                if (IsEntityInsideRadius(Game.Player.Character, crew.MarkerPosition, 20) && lineOfSight)
+                if (IsEntityInsideRadius(Game.Player.Character, crew.MarkerPosition, 40) && lineOfSight)
                 {
                     Vector3 pos = new(crew.MarkerPosition.X, crew.MarkerPosition.Y,
                         crew.MarkerPosition.Z);
@@ -347,7 +347,7 @@ public class Main : Script
                             {
                                 if (memberDistance < 8 && member.State != MemberState.Walk)
                                 {
-                                    Logger.Log($"{member.Character.Handle} Walk state.");
+                                    // Logger.Log($"{member.Character.Handle} Walk state.");
                                     member.State = MemberState.Walk;
                                     member.Character.Task.FollowToOffsetFromEntity(member.Leader.Character,
                                         member.Character.Position - member.Leader.Character.Position.Around(rndValue), 1.0f, distanceToFollow: 3.0f);
@@ -355,7 +355,7 @@ public class Main : Script
 
                                 if (memberDistance is >= 8 and < 80 && member.State != MemberState.Run)
                                 {
-                                    Logger.Log($"{member.Character.Handle} Run state.");
+                                    // Logger.Log($"{member.Character.Handle} Run state.");
                                     member.State = MemberState.Run;
                                     member.Character.Task.FollowToOffsetFromEntity(member.Leader.Character,
                                         Vector3.Zero, 3.0f, distanceToFollow: 0.0f);
@@ -382,13 +382,24 @@ public class Main : Script
                     }
 
                     // Handle Levels & Experience
+                    // This is somehow getting called before my initial check of member.Character.IsDead.
+                    // The initial idea is that activeMembers is supposed to remove the member before this gets called.
+                    // TODO: Figure how why this is getting called before the member death check at the start of this member loop.
                     foreach (Ped ped in World.GetAllPeds().Where(ped => ped.IsDead))
                     {
                         if (ped.Killer == member.Character)
                         {
-                            if (!_registeredPedKills.Contains(ped))
+                            if (!crew.RegisteredPedKills.Contains(ped))
                             {
-                                _registeredPedKills.Add(ped);
+                                crew.RegisteredPedKills.Add(ped);
+
+                                Member isPedMember = activeMembers.Find(m => m.Character == ped);
+                                if (isPedMember != null)
+                                {
+                                    Logger.Log("Ped was a member, continuing.");
+                                    continue;
+                                }
+                                
                                 ped.MarkAsNoLongerNeeded();
 
                                 int pedType = Function.Call<int>(Hash.GET_PED_TYPE, ped);

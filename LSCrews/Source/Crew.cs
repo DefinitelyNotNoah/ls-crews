@@ -35,10 +35,12 @@ public class Crew
 
     [JsonIgnore] public bool HavePlaceholdersSpawned;
 
+    [JsonIgnore] public List<Ped> RegisteredPedKills = new();
+
     [JsonIgnore] public Blip Blip { get; set; }
 
     [JsonIgnore] public readonly List<Member> ActiveMembers = new();
-
+    
     public string CrewName;
 
     public readonly List<uint> ModelVariations = new();
@@ -84,7 +86,7 @@ public class Crew
         Logger.Log($"Increasing level to {CrewLevel}");
         Logger.Log("Total Crew XP: " + Experience);
         Logger.Log("XP to Level Up: " + Level.ProjectedExperience(CrewLevel));
-        UpdateJson();
+        // UpdateJson();
     }
 
     private void IncreaseExperience(int amount)
@@ -93,7 +95,7 @@ public class Crew
         Logger.Log($"Increasing experience by {amount}.");
         Logger.Log("Total Crew XP: " + Experience);
         Logger.Log("XP to Level Up: " + Level.ProjectedExperience(CrewLevel));
-        UpdateJson();
+        // UpdateJson();
     }
 
     public void AddExperience(XpEvent xpEvent)

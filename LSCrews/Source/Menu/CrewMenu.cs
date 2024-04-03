@@ -12,6 +12,7 @@ using LSCrews.Source.Menu.MarkerData;
 using LSCrews.Source.Menu.ModelData;
 using LSCrews.Source.Menu.PlaceholderData;
 using Newtonsoft.Json;
+using Screen = GTA.UI.Screen;
 
 namespace LSCrews.Source.Menu;
 
@@ -161,6 +162,14 @@ public class CrewMenu
     {
         if (!CanConfirm) return;
 
+        // Make sure a crew doesn't exist with the same name. (to prevent override)
+        if (Crew.CrewList.Any(existingCrew => _setCrewNameItem.AltTitle == existingCrew.CrewName))
+        {
+            Logger.Log("Name already exists.");
+            Screen.ShowSubtitle("Name already exists.");
+            return;
+        }
+        
         Crew crew = new()
         {
             CrewName = _setCrewNameItem.AltTitle
@@ -247,7 +256,7 @@ public class CrewMenu
     
         if (crew.IsHired)
         {
-            Logger.Log("Cannot delete crew while hired.");
+            Screen.ShowSubtitle("Cannot delete crew while hired.");
             return;
         }
 
