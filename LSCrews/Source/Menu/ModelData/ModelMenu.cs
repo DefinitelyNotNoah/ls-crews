@@ -42,7 +42,7 @@ public partial class ModelMenu
                 modelMenu.Menu.Add(modelItem);
             }
              
-            CrewMenu.CurrentCreateMenu.Pool.Add(modelMenu.Menu);
+            CrewMenu.CurrentCrewMenu.Pool.Add(modelMenu.Menu);
             modelMenu.MenuItem = menu.AddSubMenu(modelMenu.Menu);
             modelMenu.Menu.SelectedIndexChanged += OnModelMenuIndexChanged;
             modelMenu.Menu.Closing += OnMenuClosing;

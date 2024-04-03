@@ -24,9 +24,15 @@ public class CrewMenu
     public readonly ObjectPool Pool = new();
 
     // Main Menu + List of Crews
-    public readonly NativeMenu LandingMenu = new("LSCrews", "Select an Option", "Test Description");
+    public readonly NativeMenu LandingMenu = new("LSCrews", "Select an Option");
 
-    private readonly NativeMenu _listOfCrews = new("List of Crews", "List of Crews");
+    public readonly NativeMenu CurrentCrewSubmenu = new("Current Crew", "Current Crew");
+    
+    public readonly NativeItem CurrentCrewSubmenuItem;
+
+    private readonly NativeItem _disbandCrew = new("Disband Crew");
+
+    private readonly NativeMenu _listOfCrews = new("Manage Crews", "Manage Crews");
 
     private readonly NativeItem _deleteCrewFromListItem = new("Delete Crew");
 
@@ -60,17 +66,20 @@ public class CrewMenu
     private NativeSubmenuItem CreateCrewSubmenuItem { get; set; }
 
     // Current CrewMenu Instance
-    public static CrewMenu CurrentCreateMenu { get; set; }
+    public static CrewMenu CurrentCrewMenu { get; set; }
 
     public CrewMenu()
     {
-        // Handle Main  & List of Crews
-        LandingMenu.RotateCamera = true;
+        // Handle Landing Page and Events
+        CurrentCrewSubmenuItem = LandingMenu.AddSubMenu(CurrentCrewSubmenu);
+        CurrentCrewSubmenuItem.Enabled = false; // Only enabled when crew is hired.
+        CurrentCrewSubmenu.Add(_disbandCrew);
         LandingMenu.AddSubMenu(_listOfCrews);
         CreateCrewSubmenuItem = LandingMenu.AddSubMenu(_createCrewSubmenu);
 
         LandingMenu.Closed += OnLandingMenuClosed;
         _deleteCrewFromListItem.Activated += OnDeleteCrewFromListItemActivated;
+        _disbandCrew.Activated += OnDisbandCrewItemActivated;
 
         _deleteCrewFromListItem.UseCustomBackground = true;
         _deleteCrewFromListItem.Colors.BackgroundNormal = Color.DarkRed;
@@ -78,6 +87,7 @@ public class CrewMenu
         _deleteCrewFromListItem.Colors.TitleHovered = Color.White;
 
         Pool.Add(LandingMenu);
+        Pool.Add(CurrentCrewSubmenu);
         Pool.Add(_listOfCrews);
         Pool.Add(_createCrewSubmenu);
 
@@ -109,7 +119,7 @@ public class CrewMenu
         Pool.Add(_setMarkersSubmenu);
         Pool.Add(_setPlaceholderSubmenu);
 
-        CurrentCreateMenu = this;
+        CurrentCrewMenu = this;
 
         ModelMenu.AddAllModelItems(_setModelVariationsSubmenu);
     }
@@ -217,12 +227,12 @@ public class CrewMenu
 
         Logger.Log("Reassigning");
         ((NativeMenu)sender).Back();
-        CurrentCreateMenu = new CrewMenu();
+        CurrentCrewMenu = new CrewMenu();
 
         // Add updated list of crews.
         Logger.Log("CONFIRM ITEM FINISHED");
         Logger.Log("Calling UpdateListOfCrews");
-        CurrentCreateMenu.UpdateListOfCrews();
+        CurrentCrewMenu.UpdateListOfCrews();
     }
 
     public void UpdateListOfCrews()
@@ -249,6 +259,12 @@ public class CrewMenu
         }
     }
 
+    private void OnDisbandCrewItemActivated(object sender, EventArgs args)
+    {
+        Crew.CurrentlyHired.Disband();
+        Screen.ShowSubtitle(Crew.CurrentlyHired.CrewName + " have been disbanded");
+    }
+    
     private void OnDeleteCrewFromListItemActivated(object sender, EventArgs args)
     {
         NativeMenu menu = (NativeMenu)sender;

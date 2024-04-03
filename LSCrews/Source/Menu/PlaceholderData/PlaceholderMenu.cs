@@ -77,7 +77,7 @@ public partial class PlaceholderMenu
         placeholderMenu.Menu.Back();
         placeholderMenu.Menu.Parent.Remove(item);
         placeholderMenu.Menu.Parent.SelectedIndex = 0;
-        CrewMenu.CurrentCreateMenu.Pool.Remove(placeholderMenu.Menu);
+        CrewMenu.CurrentCrewMenu.Pool.Remove(placeholderMenu.Menu);
         Placeholders.Remove(placeholderMenu);
         placeholderMenu.Ped.Delete();
         Refresh(id);
@@ -123,7 +123,7 @@ public partial class PlaceholderMenu
         RemoveItem.Colors.BackgroundHovered = Color.Red;
         RemoveItem.Colors.TitleHovered = Color.White;
         Menu.Add(RemoveItem);
-        CrewMenu.CurrentCreateMenu.Pool.Add(SelectPlaceholderMenu);
+        CrewMenu.CurrentCrewMenu.Pool.Add(SelectPlaceholderMenu);
 
         foreach ((string name, Hash hash) model in ModelMenu.RegisteredModels)
         {

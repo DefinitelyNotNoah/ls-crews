@@ -102,6 +102,6 @@ public partial class ModelMenu
             }
         }
 
-        CrewMenu.CurrentCreateMenu.SetPlaceholderSubmenuItem.Enabled = RegisteredModels.Count > 0;
+        CrewMenu.CurrentCrewMenu.SetPlaceholderSubmenuItem.Enabled = RegisteredModels.Count > 0;
     }
 }

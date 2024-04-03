@@ -46,7 +46,7 @@ public class Main : Script
         // Search through existing crew files and add to crews list.
         StorageManager.UpdateCrews(StorageManager.CrewDirectory);
         CrewMenu = new CrewMenu();
-        CrewMenu.CurrentCreateMenu.UpdateListOfCrews();
+        CrewMenu.CurrentCrewMenu.UpdateListOfCrews();
 
         // In the event that the client refreshes the script. Let's check the positions
         // for all peds & blips known to the client. If any blip or ped is in the same positions as crew, delete.
@@ -116,17 +116,17 @@ public class Main : Script
     private void OnKeyDown(object sender, EventArgs e)
     {
         string key = ((KeyEventArgs) e).KeyCode.ToString();
-        if (key == "B" && !CrewMenu.CurrentCreateMenu.Pool.AreAnyVisible)
+        if (key == "B" && !CrewMenu.CurrentCrewMenu.Pool.AreAnyVisible)
         {
-            CrewMenu.CurrentCreateMenu.LandingMenu.Visible = !CrewMenu.CurrentCreateMenu.LandingMenu.Visible;
+            CrewMenu.CurrentCrewMenu.LandingMenu.Visible = !CrewMenu.CurrentCrewMenu.LandingMenu.Visible;
         }
     }
 
     private void OnTick(object sender, EventArgs args)
     {
-        CrewMenu.CurrentCreateMenu.Pool.Process();
+        CrewMenu.CurrentCrewMenu.Pool.Process();
 
-        if (CrewMenu.CurrentCreateMenu.Pool.AreAnyVisible)
+        if (CrewMenu.CurrentCrewMenu.Pool.AreAnyVisible)
         {
             World.DrawMarker(MarkerType.VerticalCylinder, CrewMenu.TemporaryMarkerPos, Vector3.Zero, Vector3.Zero,
                 _scale,
@@ -192,6 +192,7 @@ public class Main : Script
                 // Handle member creation.
                 if (IsEntityInsideRadius(Game.Player.Character, crew.MarkerPosition, MarkerXy))
                 {
+                    // TODO: Remove AreAnyHired in favor of Crew.CurrentlyHired, along with the SetCrewHired method.
                     if (!Crew.AreAnyHired)
                     {
                         if (Game.IsControlJustPressed(Control.Context))
@@ -266,6 +267,17 @@ public class Main : Script
 
             if (crew.IsHired)
             {
+                if (Crew.CurrentlyHired != crew)
+                {
+                    Crew.CurrentlyHired = crew;
+                }
+                // Enable Current Crew Menu
+                if (!CrewMenu.CurrentCrewSubmenuItem.Enabled)
+                {
+                    CrewMenu.CurrentCrewSubmenuItem.Enabled = true;
+                    Logger.Log("Enabling CurrentCrew Item");
+                }
+
                 // Handle player death. (disband crew)
                 if (Game.Player.Character.IsDead)
                 {

@@ -142,6 +142,7 @@ public class Member
         {
             Logger.Log("RUNNING MARK.");
             Character.MarkAsNoLongerNeeded();
+            Character.BlockPermanentEvents = true;
             Character.AttachedBlip.Delete();
         }
 

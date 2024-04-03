@@ -12,7 +12,7 @@ public partial class PlaceholderMenu
     {
         PlaceholderMenu placeholderMenu = Get((NativeMenu)sender);
         Delete(placeholderMenu);
-        CrewMenu.CurrentCreateMenu.UpdateConfirmColors();
+        CrewMenu.CurrentCrewMenu.UpdateConfirmColors();
     }
 
     private void OnPlaceholderPositionActivated(object sender, EventArgs args)
@@ -48,9 +48,9 @@ public partial class PlaceholderMenu
         Vector3 pos = new(Ped.Position.X, Ped.Position.Y, Ped.Position.Z - 1);
         float heading = Ped.Heading;
         Ped.Delete();
-        CrewMenu.CurrentCreateMenu.TemporaryPlaceholders.Remove(Ped);
+        CrewMenu.CurrentCrewMenu.TemporaryPlaceholders.Remove(Ped);
         Ped = World.CreatePed((PedHash)Convert.ToUInt32(item.AltTitle), pos, heading);
         SetPlaceholderAttributes(Ped);
-        CrewMenu.CurrentCreateMenu.TemporaryPlaceholders.Add(Ped);
+        CrewMenu.CurrentCrewMenu.TemporaryPlaceholders.Add(Ped);
     }
 }

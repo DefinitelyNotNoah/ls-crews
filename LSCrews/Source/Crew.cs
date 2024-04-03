@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using GTA;
 using GTA.Math;
+using LSCrews.Source.Menu;
 using Newtonsoft.Json;
 
 namespace LSCrews.Source;
@@ -20,6 +21,8 @@ public enum XpEvent
 public class Crew
 {
     public static readonly List<Crew> CrewList = new();
+
+    public static Crew CurrentlyHired { get; set; }
 
     [JsonIgnore] public int PreviousProjected;
 
@@ -66,6 +69,9 @@ public class Crew
         {
             member.LeaveCrew();
         }
+
+        CrewMenu.CurrentCrewMenu.CurrentCrewSubmenu.Back();
+        CrewMenu.CurrentCrewMenu.CurrentCrewSubmenuItem.Enabled = false;
     }
 
     private void UpdateJson()
