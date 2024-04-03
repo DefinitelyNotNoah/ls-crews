@@ -37,8 +37,9 @@ public class Main : Script
     {
         // Establish Directories
         StorageManager.EstablishAllDirectories();
-        
-        Function.Call(Hash.SET_CAN_ATTACK_FRIENDLY, Game.Player.Character, true, false);
+
+        // Used for development.
+        // Function.Call(Hash.SET_CAN_ATTACK_FRIENDLY, Game.Player.Character, true, false);
 
         Tick += OnTick;
         KeyDown += OnKeyDown;
@@ -411,6 +412,7 @@ public class Main : Script
                         }
                     }
 
+                    // Used for development.
                     // member.DisplayHandles();
                 }
 
@@ -462,6 +464,7 @@ public class Main : Script
                                             seat = vehicleGroup.Seats.Dequeue();
                                         }
 
+                                        // TODO: In the event that the vehicle gets out of range we need to prevent the members from infinitely chasing the vehicle.
                                         Logger.Log($"Setting member {member.Character.Handle} into seat " + seat);
                                         member.EnterVehicle(vehicle, seat);
                                         vehicleGroup.AddToGroup(member);
@@ -480,6 +483,10 @@ public class Main : Script
                                 // TODO: Do something about the members who couldn't find a vehicle.
                                 foreach (Member member in remainingVehicleMembers)
                                 {
+                                    // For now we'll just assign them to run after their leader.
+                                    // Eventually we'll have logic to gradually check for vehicles around them as they're running.
+                                    member.Character.Task.FollowToOffsetFromEntity(member.Leader.Character,
+                                        Vector3.Zero, 3.0f, distanceToFollow: 0.0f);
                                     Logger.Log("This member has no vehicle: " + member.Character.Handle);
                                 }
 
