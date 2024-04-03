@@ -1,0 +1,35 @@
+namespace LSCrews.Source.Data;
+
+public enum PedType
+{
+    PedTypePlayer0,
+    PedTypePlayer1,
+    PedTypeNetworkPlayer,
+    PedTypePlayer2,
+    PedTypeCivmale,
+    PedTypeCivfemale,
+    PedTypeCop,
+    PedTypeGangAlbanian,
+    PedTypeGangBiker1,
+    PedTypeGangBiker2,
+    PedTypeGangItalian,
+    PedTypeGangRussian,
+    PedTypeGangRussian2,
+    PedTypeGangIrish,
+    PedTypeGangJamaican,
+    PedTypeGangAfricanAmerican,
+    PedTypeGangKorean,
+    PedTypeGangChineseJapanese,
+    PedTypeGangPuertoRican,
+    PedTypeDealer,
+    PedTypeMedic,
+    PedTypeFireman,
+    PedTypeCriminal,
+    PedTypeBum,
+    PedTypeProstitute,
+    PedTypeSpecial,
+    PedTypeMission,
+    PedTypeSwat,
+    PedTypeAnimal,
+    PedTypeArmy
+};
