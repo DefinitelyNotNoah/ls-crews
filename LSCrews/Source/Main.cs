@@ -38,7 +38,7 @@ public class Main : Script
         StorageManager.EstablishAllDirectories();
 
         // Used for development.
-        Function.Call(Hash.SET_CAN_ATTACK_FRIENDLY, Game.Player.Character, true, false);
+        // Function.Call(Hash.SET_CAN_ATTACK_FRIENDLY, Game.Player.Character, false, false);
 
         Tick += OnTick;
         KeyDown += OnKeyDown;
