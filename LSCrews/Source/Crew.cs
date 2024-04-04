@@ -60,6 +60,8 @@ public class Crew
     {
         AreAnyHired = toggle;
         IsHired = toggle;
+        CurrentlyHired = this;
+        CrewMenu.CurrentCrewMenu.CurrentCrewSubmenuItem.Enabled = true;
     }
 
     public void Disband()

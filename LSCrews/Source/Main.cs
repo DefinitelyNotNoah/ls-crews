@@ -268,18 +268,6 @@ public class Main : Script
 
             if (crew.IsHired)
             {
-                if (Crew.CurrentlyHired != crew)
-                {
-                    Crew.CurrentlyHired = crew;
-                }
-
-                // Enable Current Crew Menu
-                if (!CrewMenu.CurrentCrewSubmenuItem.Enabled)
-                {
-                    CrewMenu.CurrentCrewSubmenuItem.Enabled = true;
-                    Logger.Log("Enabling CurrentCrew Item");
-                }
-
                 // Handle player death. (disband crew)
                 if (Game.Player.Character.IsDead)
                 {
@@ -633,6 +621,15 @@ public class Main : Script
                     Scaleform.DisplayLevelUp(0, crew.PreviousProjected, 0, savedXp, crew.CrewLevel);
 
                     Logger.Log($"Crew has leveled up to {crew.CrewLevel} with {crew.Experience} XP");
+                }
+            }
+            else
+            {
+                // Enable Current Crew Menu
+                if (CrewMenu.CurrentCrewSubmenuItem.Enabled)
+                {
+                    CrewMenu.CurrentCrewSubmenuItem.Enabled = false;
+                    Logger.Log("Disabling CurrentCrew Item");
                 }
             }
         }
