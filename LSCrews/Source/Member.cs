@@ -87,8 +87,6 @@ public class Member
 
     public Vehicle AssignedVehicle { get; set; }
 
-    private readonly Random _random = new();
-
     public Member(Ped character, Crew crew)
     {
         Character = character;
@@ -185,7 +183,7 @@ public class Member
 
         // Weapons
         WeaponHash[] weapons = Level.GetWeapons(Crew.CrewLevel);
-        WeaponHash weaponHash = weapons[_random.Next(0, weapons.Length)];
+        WeaponHash weaponHash = weapons[Main.RandomInstance.Next(0, weapons.Length)];
         Character.Weapons.Give(weaponHash, 9999, true, true);
         Logger.Log("Setting Weapon to " + weaponHash);
 

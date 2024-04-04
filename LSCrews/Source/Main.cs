@@ -20,6 +20,8 @@ namespace LSCrews.Source;
 
 public class Main : Script
 {
+    public static readonly Random RandomInstance = new();
+
     private bool IsEntityInsideRadius(Entity entity, Vector3 position, float distance) =>
         Vector3.Distance2D(entity.Position, position) * 2 < distance;
 
@@ -27,7 +29,6 @@ public class Main : Script
     private const float SearchRange = 75.0f;
     private readonly Vector3 _scale = new(MarkerXy, MarkerXy, 0.5f);
     private readonly Color _color = Color.FromArgb(255, 243, 225, 107);
-    private readonly Random _random = new();
     public static int WantedLevelBeforeEvasion;
 
     private CrewMenu CrewMenu { get; set; }
@@ -231,7 +232,7 @@ public class Main : Script
                             // Spawn the crew in.
                             for (int i = 0; i < Level.GetPedCount(crew.CrewLevel); i++)
                             {
-                                PedHash pedHash = (PedHash) crew.ModelVariations[_random.Next(0, crew.ModelVariations.Count)];
+                                PedHash pedHash = (PedHash) crew.ModelVariations[RandomInstance.Next(0, crew.ModelVariations.Count)];
                                 Ped ped = World.CreatePed(pedHash, Game.Player.Character.Position);
                                 Member member = new(ped, crew);
                                 member.AssignAttributes();
@@ -271,6 +272,7 @@ public class Main : Script
                 {
                     Crew.CurrentlyHired = crew;
                 }
+
                 // Enable Current Crew Menu
                 if (!CrewMenu.CurrentCrewSubmenuItem.Enabled)
                 {
@@ -351,7 +353,7 @@ public class Main : Script
                             }
 
                             crew.Owner.State = MemberState.None;
-                            int rndValue = _random.Next(2, 5);
+                            int rndValue = RandomInstance.Next(2, 5);
 
                             float memberDistance = Vector3.Distance2D(member.Leader.Character.Position, member.Character.Position);
                             float playerDistance = Vector3.Distance2D(Game.Player.Character.Position, member.Character.Position);
@@ -411,7 +413,7 @@ public class Main : Script
                                     Logger.Log("Ped was a member, continuing.");
                                     continue;
                                 }
-                                
+
                                 ped.MarkAsNoLongerNeeded();
 
                                 int pedType = Function.Call<int>(Hash.GET_PED_TYPE, ped);
