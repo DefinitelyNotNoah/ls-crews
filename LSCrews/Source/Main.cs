@@ -625,7 +625,7 @@ public class Main : Script
             }
             else
             {
-                // Enable Current Crew Menu
+                // Disable Current Crew Menu
                 if (CrewMenu.CurrentCrewSubmenuItem.Enabled)
                 {
                     CrewMenu.CurrentCrewSubmenuItem.Enabled = false;
